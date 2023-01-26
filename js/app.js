@@ -3,6 +3,7 @@ const carrito = document.querySelector('#carrito');
 const contenedorCarrito = document.querySelector('#lista-carrito tbody');
 const vaciarCarritoBtn = document.querySelector('#vaciar-carrito');
 const listaCursos = document.querySelector('#lista-cursos');
+let articulosCarrito = []; // Aquí se iran agregando los articulos.
 
 
 cargarEventListeners();
@@ -32,9 +33,46 @@ function leerDatosCurso(curso) {
         img: curso.querySelector('img').src,
         titulo: curso.querySelector('h4').textContent,
         precio: curso.querySelector('.precio span').textContent,
-        id: curso.querySelector('a').getAttribute('data-id'), // Obtener el valo de un atributo de HTML.
+        id: curso.querySelector('a').getAttribute('data-id'), // Obtener el valor de un atributo de HTML.
         cantidad: 1
     }
 
-    console.log(infoCurso);
+    // Agrega elementos al arreglo del carrito
+    articulosCarrito = [...articulosCarrito, infoCurso]; // Agregamos una copia de articulosCarrito para no perder la referencia de los cursos que hemos agregado y añadimos el nuevo curso que estamos seleccionado. Esto lo instanciamos en el arreglo que tenemos para nuestro carrito llamado articulosCarrito.
+
+    console.log(articulosCarrito);
+
+    carritoHTML();
+}
+
+
+// Muestra el carrito de compras en el HTML.
+function carritoHTML() {
+    // Limpiar el HTML para eliminar duplicados
+    limpiarHTML();
+
+    // Recorre el carrito y genera el HTML.
+    articulosCarrito.forEach( (curso) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                ${curso.titulo}
+            </td>
+        `;
+
+        // Agrega el HTML del carrito en el tbody.
+        contenedorCarrito.appendChild(row);
+    });
+}
+
+
+// Elimina los cursos del tbody.
+function limpiarHTML() {
+    // Forma lenta para limpiar HTML
+    // contenedorCarrito.innerHTML = '';
+
+    // Este método mejora el performance.
+    while(contenedorCarrito.firstChild) { // Si contenedorCarrito tiene al menos un elemento dentro, se sigue ejecutando la limpieza hasta que ya no tenga ningun elemento.
+        contenedorCarrito.removeChild(contenedorCarrito.firstChild);
+    }
 }
